@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronRight, MousePointer2, Lightbulb } from 'lucide-react';
 
 const TypingHeader = ({ content, lang, replayKey }) => {
@@ -14,6 +14,10 @@ const TypingHeader = ({ content, lang, replayKey }) => {
   
   // Posición donde se abrió el menú (para que se quede fijo)
   const [menuPos, setMenuPos] = useState({ x: '0', y: '0' });
+
+ // Refs for position calculation
+  const containerRef = useRef(null);
+  const errorRef = useRef(null);
 
   // Cursor blinking effect
   useEffect(() => {
@@ -52,9 +56,21 @@ const TypingHeader = ({ content, lang, replayKey }) => {
       setMousePos({ x: '90%', y: '150%', opacity: 1 });
       await new Promise(r => setTimeout(r, 100));
       
-      // Ajuste de posición X según idioma
-      const targetX = lang === 'en' ? '44%' : '43%'; // ES ajustado más a la derecha
-      const targetY = '45%';
+      // Calcular posición del error dinámicamente
+      let targetX = '50%';
+      let targetY = '50%';
+
+      if (containerRef.current && errorRef.current) {
+        const containerRect = containerRef.current.getBoundingClientRect();
+        const errorRect = errorRef.current.getBoundingClientRect();
+
+        // Calculamos el centro del elemento subrayado relativo al contenedor
+        const relativeX = errorRect.left - containerRect.left + (errorRect.width / 2);
+        const relativeY = errorRect.top - containerRect.top + (errorRect.height / 2);
+
+        targetX = `${relativeX}px`;
+        targetY = `${relativeY}px`;
+      }
       
       setMousePos({ x: targetX, y: targetY, opacity: 1 });
       await new Promise(r => setTimeout(r, 800));
@@ -116,13 +132,15 @@ const TypingHeader = ({ content, lang, replayKey }) => {
       <div className="flex items-center text-lg md:text-2xl text-neutral-300 relative min-h-[3rem] pl-4 md:pl-6">
          <span className="text-neutral-600 mr-3 select-none">{`>`}</span>
 
-         <div className="relative flex-1">
+         <div className="relative flex-1" ref={containerRef}>
             <span className="break-words relative">
               {(typingPhase === 'idle_bug' || typingPhase === 'moving_mouse' || typingPhase === 'menu_open' || typingPhase === 'moving_to_option' || typingPhase === 'fixing') ? (
                 <>
                   {text.split(/(\bLuisca\b|\bWorld\b|\bmundo\b)/g).map((part, i) => {
                      if (part === 'Luisca' || part === 'World' || part === 'mundo') {
-                        return <span key={i} className="underline decoration-wavy decoration-red-500 underline-offset-4 decoration-2">{part}</span>
+                        // Asignamos ref solo a "Luisca" que es el error objetivo (o el primero que aparezca)
+                        const isTarget = part === 'Luisca';
+                        return <span key={i} ref={isTarget ? errorRef : null} className="underline decoration-wavy decoration-red-500 underline-offset-4 decoration-2">{part}</span>
                      }
                      return part;
                   })}
