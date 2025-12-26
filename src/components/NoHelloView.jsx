@@ -1,11 +1,8 @@
 import React from 'react';
 import { Terminal as TerminalIcon, AlertCircle, CheckCircle, HeartHandshake, ArrowLeft } from 'lucide-react';
-import { Link, useOutletContext } from 'react-router-dom';
 import ChatScenario from './ChatScenario';
 
-const NoHelloView = () => {
-  const { content } = useOutletContext();
-
+const NoHelloView = ({ content, setView }) => {
   return (
     <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-6 md:p-10 shadow-2xl relative overflow-hidden animate-in slide-in-from-right duration-500">
         {/* Decorative glow */}
@@ -73,13 +70,13 @@ const NoHelloView = () => {
           </div>
 
           <div className="pt-8 flex justify-start border-t border-neutral-800 mt-6">
-            <Link 
-              to="/"
+            <button 
+              onClick={() => setView('home')}
               className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors"
             >
               <ArrowLeft size={16} />
               <span>{content.backBtn}</span>
-            </Link>
+            </button>
           </div>
         </div>
     </div>

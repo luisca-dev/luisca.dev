@@ -4,39 +4,37 @@ const DevProfile = ({ content }) => {
   return (
     <div className="text-sm md:text-base leading-relaxed pl-4 md:pl-8 border-l-2 border-neutral-800 font-medium">
       <div className="text-neutral-400">
-        <span className="text-red-500">const</span> <span className="text-white">developer</span> = <span className="text-yellow-100">{`{`}</span>
+        <span className="text-red-500">const</span> <span className="text-white">luisca</span> = <span className="text-yellow-100">{`{`}</span>
       </div>
       
       <div className="pl-6 text-neutral-300 hover:bg-neutral-800/30 rounded px-2 -ml-2 transition-colors">
         {content.keys.name}: <span className="text-green-400">"Luiscarlo Tarazona"</span>,
       </div>
-      <div className="pl-6 text-neutral-300 hover:bg-neutral-800/30 rounded px-2 -ml-2 transition-colors">
-        {content.keys.alias}: <span className="text-green-400">"Luisca"</span>,
-      </div>
+      
       <div className="pl-6 text-neutral-300 hover:bg-neutral-800/30 rounded px-2 -ml-2 transition-colors">
         {content.keys.role}: <span className="text-green-400">"{content.roleValue}"</span>,
       </div>
-      <div className="pl-6 text-neutral-300 hover:bg-neutral-800/30 rounded px-2 -ml-2 transition-colors">
-        {content.keys.status}: <span className="text-green-400">"{content.statusValue}"</span>,
-      </div>
       
-      <div className="pl-6 text-neutral-300 hover:bg-neutral-800/30 rounded px-2 -ml-2 transition-colors">
-        {content.keys.passions}: [
-        {content.passionsLabels.map((passion, i) => (
+      {/* Status Lambda Chain */}
+      <div className="pl-6 text-neutral-300 hover:bg-neutral-800/30 rounded px-2 -ml-2 transition-colors group/status">
+        {content.keys.status}: <span className="text-purple-400">() =&gt;</span> 
+        {content.statusMethods.map((method, i) => (
           <React.Fragment key={i}>
-            <span className="text-purple-300">"{passion}"</span>
-            {i < content.passionsLabels.length - 1 && ", "}
+            <span className="text-blue-400">{method}</span>()
+            {i < content.statusMethods.length - 1 && "."}
           </React.Fragment>
         ))}
-        ],
+        ,
+        <span className="text-neutral-500 italic ml-3 opacity-70 group-hover/status:opacity-100 transition-opacity select-none">{content.statusComment}</span>
       </div>
-
+      
+      {/* Unified Interests Array */}
       <div className="pl-6 text-neutral-300 hover:bg-neutral-800/30 rounded px-2 -ml-2 transition-colors">
-        {content.keys.hobbies}: [
-        {content.hobbiesLabels.map((hobby, i) => (
+        {content.keys.interests}: [
+        {content.interestsLabels.map((item, i) => (
           <React.Fragment key={i}>
-            <span className="text-orange-300">"{hobby}"</span>
-            {i < content.hobbiesLabels.length - 1 && ", "}
+            <span className="text-orange-300">"{item}"</span>
+            {i < content.interestsLabels.length - 1 && ", "}
           </React.Fragment>
         ))}
         ],
